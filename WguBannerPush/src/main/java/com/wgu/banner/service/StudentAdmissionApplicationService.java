@@ -68,10 +68,8 @@ public class StudentAdmissionApplicationService {
 				curriculaRequest.setCurriculaDegcCode(admissionApplicationRequest.getCurriculaDegcCode());
 				curriculaRequest.setCurriculaLmodCode(admissionApplicationRequest.getCurriculaLmodCode());
 				curriculaRequest.setCurriculaRollInd("N");
-//				Integer curriculaSeqNo = curriculaRepository.getMaxPIDM(saveStudentAdmissionApplication.getAdmissionApplicationPIDM());
 				StudentCurriculaEntity curriculaSeqNo = curriculaRepository.findFirstByCurriculaPIDMOrderByCurriculaSeqNoDesc(saveStudentAdmissionApplication.getAdmissionApplicationPIDM());
 				curriculaRequest.setCurriculaSeqNo(curriculaSeqNo.getCurriculaSeqNo()+1);  // Setting Sequence Number from Query in Curricula Repository
-//				Integer curriculaKeySeqNo = curriculaRepository.getMaxKeySeqNo(admissionApplicationRequest.getAdmissionApplicationPIDM(), admissionApplicationRequest.getCurriculaLmodCode());
 				StudentCurriculaEntity curriculaKeySeqNo = curriculaRepository.findFirstByCurriculaPIDMAndCurriculaLmodCodeOrderByCurriculaKeySeqnoDesc(admissionApplicationRequest.getAdmissionApplicationPIDM(), admissionApplicationRequest.getCurriculaLmodCode());
 				curriculaRequest.setCurriculaKeySeqNo(curriculaKeySeqNo.getCurriculaKeySeqno()+1); // Incrementing Setting Key Sequence Number from Query in Curricula Repository
 				curriculaService.saveCurricula(curriculaRequest);    // Sending data to be saved in SORLCUR table

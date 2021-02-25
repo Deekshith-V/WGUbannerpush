@@ -8,5 +8,4 @@ import com.wgu.banner.entity.StudentGeneralAcademicEntity;
 @Repository  // SGASTDN table
 public interface StudentGeneralStudentRepository extends JpaRepository<StudentGeneralAcademicEntity, Integer> {
 	
-	//public GeneralStudent findFirst1OrderBySGBSTDNPIDMdesc();
 }

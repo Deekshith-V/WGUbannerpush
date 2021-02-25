@@ -32,11 +32,9 @@ private final static Logger logger = LoggerFactory.getLogger(StudentAdmissionDec
 		StudentAdmissionDecisionEntity studentAdmissionDecision = new StudentAdmissionDecisionEntity();
 		studentAdmissionDecision.setStudentAdmissionDecisionPIDM(admissionDecisionRequest.getStudentAdmissionDecisionPIDM());
 		studentAdmissionDecision.setStudentAdmissionDecisionTermCode(admissionDecisionRequest.getStudentAdmissionDecisionTermCode());
-//		Integer admissionDecisionApplNo = admissionDecisionRepository.getMaxApplNo(admissionDecisionRequest.getStudentAdmissionDecisionPIDM());
 		StudentAdmissionApplicationEntity admissionApplicationApplNoGet = admissionApplicationrepository.findByAdmissionApplicationPIDMAndAdmissionApplicationTermCodeEntry(admissionDecisionRequest.getStudentAdmissionDecisionPIDM(), admissionDecisionRequest.getStudentAdmissionDecisionTermCode());
 		studentAdmissionDecision.setStudentAdmissionDecisionApplNo(admissionApplicationApplNoGet.getAdmissionApplicationApplNo());          // Setting Application Number 
 		StudentAdmissionDecisionEntity admissionDecisionSeqNo = admissionDecisionRepository.findTopByStudentAdmissionDecisionPIDMAndStudentAdmissionDecisionTermCodeOrderByStudentAdmissionDecisionSeqNoDesc(admissionDecisionRequest.getStudentAdmissionDecisionPIDM(), admissionDecisionRequest.getStudentAdmissionDecisionTermCode());
-//		admissionDecisionSeqNo = admissionDecisionSeqNo == null ? 1 : admissionDecisionSeqNo;         // If Sequence Number is NULL representing new record, set SeqNo to 1
 		studentAdmissionDecision.setStudentAdmissionDecisionSeqNo(admissionDecisionSeqNo == null ? 1 : admissionDecisionSeqNo.getStudentAdmissionDecisionSeqNo()+1);            // Setting Sequence Number from Query in Admission Decision Repository
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // Setting Date Format
 		LocalDateTime presnetDate = LocalDateTime.now();                            // Getting Present Time

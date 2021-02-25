@@ -57,10 +57,8 @@ public class StudentGeneralAcademicService {
 			curriculaRequest.setCurriculaDegcCode(generalAcademicRequest.getCurriculaDegcCode());
 			curriculaRequest.setCurriculaLmodCode(generalAcademicRequest.getCurriculaLmodCode());
 			curriculaRequest.setCurriculaRollInd("Y");
-//			Integer curriculaSeqNo = curriculaRepository.getMaxPIDM(curriculaRequest.getCurriculaPIDM());
 			StudentCurriculaEntity curriculaSeqNo = curriculaRepository.findFirstByCurriculaPIDMOrderByCurriculaSeqNoDesc(curriculaRequest.getCurriculaPIDM());
 			curriculaRequest.setCurriculaSeqNo(curriculaSeqNo.getCurriculaSeqNo());  // Setting Sequence Number from Query in Curricula Repository
-//			Integer curriculaKeySeqNo = curriculaRepository.getMaxKeySeqNo(generalAcademicRequest.getGeneralAcademicPIDM(), generalAcademicRequest.getCurriculaLmodCode());
 			StudentCurriculaEntity curriculaKeySeqNo = curriculaRepository.findFirstByCurriculaPIDMAndCurriculaLmodCodeOrderByCurriculaKeySeqnoDesc(generalAcademicRequest.getGeneralAcademicPIDM(), generalAcademicRequest.getCurriculaLmodCode());
 			curriculaRequest.setCurriculaKeySeqNo(curriculaKeySeqNo.getCurriculaKeySeqno()); // Incrementing Setting Key Sequence Number from Query in Curricula Repository
 			curriculaService.saveCurricula(curriculaRequest);    // Sending data to be saved in SORLCUR table
