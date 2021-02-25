@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wgu.banner.entity.StudentAdmissionApplicationEntity;
+import com.wgu.banner.entity.StudentCurriculaEntity;
 import com.wgu.banner.jpa.StudentAdmissionApplicationRepository;
 import com.wgu.banner.jpa.StudentCurriculaRepository;
 import com.wgu.banner.model.StudentAdmissionApplicationRequest;
@@ -40,8 +41,8 @@ public class StudentAdmissionApplicationService {
 			StudentAdmissionApplicationEntity studentAdmissionApplication = new StudentAdmissionApplicationEntity();
 			studentAdmissionApplication.setAdmissionApplicationPIDM(admissionApplicationRequest.getAdmissionApplicationPIDM());
 			studentAdmissionApplication.setAdmissionApplicationTermCodeEntry(admissionApplicationRequest.getAdmissionApplicationTermCode());
-			Integer admissionApplicationApplNo = admissionApplicationrepository.getMaxApplNo(admissionApplicationRequest.getAdmissionApplicationPIDM());
-			studentAdmissionApplication.setAdmissionApplicationApplNo(admissionApplicationApplNo);                   // Setting Application Number from Query in Admission Application Repository
+			StudentAdmissionApplicationEntity applicationApplNo = admissionApplicationrepository.findTopByAdmissionApplicationPIDMOrderByAdmissionApplicationApplNoDesc(admissionApplicationRequest.getAdmissionApplicationPIDM());
+			studentAdmissionApplication.setAdmissionApplicationApplNo(applicationApplNo.getAdmissionApplicationApplNo()+1);
 			studentAdmissionApplication.setAdmissionApplicationLevlCode(admissionApplicationRequest.getCurriculaLevlCode());
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // Setting Date Format
 			LocalDateTime presnetDate = LocalDateTime.now();                            // Getting Present Time
@@ -67,10 +68,12 @@ public class StudentAdmissionApplicationService {
 				curriculaRequest.setCurriculaDegcCode(admissionApplicationRequest.getCurriculaDegcCode());
 				curriculaRequest.setCurriculaLmodCode(admissionApplicationRequest.getCurriculaLmodCode());
 				curriculaRequest.setCurriculaRollInd("N");
-				Integer curriculaSeqNo = curriculaRepository.getMaxPIDM(saveStudentAdmissionApplication.getAdmissionApplicationPIDM());
-				curriculaRequest.setCurriculaSeqNo(curriculaSeqNo);  // Setting Sequence Number from Query in Curricula Repository
-				Integer curriculaKeySeqNo = curriculaRepository.getMaxKeySeqNo(admissionApplicationRequest.getAdmissionApplicationPIDM(), admissionApplicationRequest.getCurriculaLmodCode());
-				curriculaRequest.setCurriculaKeySeqNo(curriculaKeySeqNo+1); // Incrementing Setting Key Sequence Number from Query in Curricula Repository
+//				Integer curriculaSeqNo = curriculaRepository.getMaxPIDM(saveStudentAdmissionApplication.getAdmissionApplicationPIDM());
+				StudentCurriculaEntity curriculaSeqNo = curriculaRepository.findFirstByCurriculaPIDMOrderByCurriculaSeqNoDesc(saveStudentAdmissionApplication.getAdmissionApplicationPIDM());
+				curriculaRequest.setCurriculaSeqNo(curriculaSeqNo.getCurriculaSeqNo()+1);  // Setting Sequence Number from Query in Curricula Repository
+//				Integer curriculaKeySeqNo = curriculaRepository.getMaxKeySeqNo(admissionApplicationRequest.getAdmissionApplicationPIDM(), admissionApplicationRequest.getCurriculaLmodCode());
+				StudentCurriculaEntity curriculaKeySeqNo = curriculaRepository.findFirstByCurriculaPIDMAndCurriculaLmodCodeOrderByCurriculaKeySeqnoDesc(admissionApplicationRequest.getAdmissionApplicationPIDM(), admissionApplicationRequest.getCurriculaLmodCode());
+				curriculaRequest.setCurriculaKeySeqNo(curriculaKeySeqNo.getCurriculaKeySeqno()+1); // Incrementing Setting Key Sequence Number from Query in Curricula Repository
 				curriculaService.saveCurricula(curriculaRequest);    // Sending data to be saved in SORLCUR table
 				logger.info("StudentAdmissionApplicationService :: saveAdmissionApplication :: Passing Data to Student Curricula Service");
 				logger.info("StudentAdmissionApplicationService :: saveAdmissionApplication :: Execution completed.");

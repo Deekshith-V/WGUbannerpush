@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
+import com.wgu.banner.entity.StudentCurriculaEntity;
 import com.wgu.banner.entity.StudentGeneralAcademicEntity;
 import com.wgu.banner.jpa.StudentCurriculaRepository;
 import com.wgu.banner.jpa.StudentGeneralStudentRepository;
@@ -56,10 +57,12 @@ public class StudentGeneralAcademicService {
 			curriculaRequest.setCurriculaDegcCode(generalAcademicRequest.getCurriculaDegcCode());
 			curriculaRequest.setCurriculaLmodCode(generalAcademicRequest.getCurriculaLmodCode());
 			curriculaRequest.setCurriculaRollInd("Y");
-			Integer curriculaSeqNo = curriculaRepository.getMaxPIDM(curriculaRequest.getCurriculaPIDM());
-			curriculaRequest.setCurriculaSeqNo(curriculaSeqNo);  // Setting Sequence Number from Query in Curricula Repository
-			Integer curriculaKeySeqNo = curriculaRepository.getMaxKeySeqNo(generalAcademicRequest.getGeneralAcademicPIDM(), generalAcademicRequest.getCurriculaLmodCode());
-			curriculaRequest.setCurriculaKeySeqNo(curriculaKeySeqNo);  // Setting Key Sequence Number from Query in Curricula Repository
+//			Integer curriculaSeqNo = curriculaRepository.getMaxPIDM(curriculaRequest.getCurriculaPIDM());
+			StudentCurriculaEntity curriculaSeqNo = curriculaRepository.findFirstByCurriculaPIDMOrderByCurriculaSeqNoDesc(curriculaRequest.getCurriculaPIDM());
+			curriculaRequest.setCurriculaSeqNo(curriculaSeqNo.getCurriculaSeqNo());  // Setting Sequence Number from Query in Curricula Repository
+//			Integer curriculaKeySeqNo = curriculaRepository.getMaxKeySeqNo(generalAcademicRequest.getGeneralAcademicPIDM(), generalAcademicRequest.getCurriculaLmodCode());
+			StudentCurriculaEntity curriculaKeySeqNo = curriculaRepository.findFirstByCurriculaPIDMAndCurriculaLmodCodeOrderByCurriculaKeySeqnoDesc(generalAcademicRequest.getGeneralAcademicPIDM(), generalAcademicRequest.getCurriculaLmodCode());
+			curriculaRequest.setCurriculaKeySeqNo(curriculaKeySeqNo.getCurriculaKeySeqno()); // Incrementing Setting Key Sequence Number from Query in Curricula Repository
 			curriculaService.saveCurricula(curriculaRequest);    // Sending data to be saved in SORLCUR table
 			logger.info("StudentGeneralAcademicService :: saveGeneralAcademic :: Passing Data to Student Curricula Service");
 		}
